@@ -1,0 +1,31 @@
+# Compiled Go binaries and objects
+/bin/
+/obj/
+/pkg/
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+*.ipr
+# If you want to share run configurations with your team, remove .run/
+.run/
+main
+
+# Miscellaneous files
+*.swp
+*.log
+*.tmp
+.tmp/
+*.tmp.*
+.temp/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
