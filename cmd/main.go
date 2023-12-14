@@ -8,16 +8,11 @@ import (
 )
 
 func main() {
-	configs, err := config.LoadConfig(".")
-	if err != nil {
-		panic(err)
-	}
-
 	gin.SetMode(gin.DebugMode) //TODO Change to gin.ReleaseMode
 	server := api.NewServer()
 
 	// Start the server
-	err = server.Start(fmt.Sprintf(":%s", configs.Port))
+	err := server.Start(fmt.Sprintf(":%s", config.GetConfig().Port))
 	if err != nil {
 		panic(err)
 	}
