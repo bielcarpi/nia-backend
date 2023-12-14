@@ -1,7 +1,6 @@
 # Compiled Go binaries and objects
 /bin/
 /obj/
-/pkg/
 
 # IntelliJ IDEA files
 .idea/

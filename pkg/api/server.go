@@ -2,6 +2,8 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"nia-backend/pkg/api/handlers"
+	"nia-backend/pkg/api/middleware"
 )
 
 type Server struct {
@@ -13,9 +15,10 @@ func NewServer() *Server {
 	server := &Server{}
 	router := gin.Default()
 
-	// Set up routing
-	// We can add middleware to the routes here too
-	//router.POST("/accounts", server.createAccount)
+	// Set up /api routing
+	apiRouter := router.Group("/api")
+	apiRouter.Use(middleware.AuthMiddleware())
+	apiRouter.POST("/audio", handlers.ProcessAudioHandler)
 
 	server.router = router
 	return server

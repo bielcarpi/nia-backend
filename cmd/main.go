@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"nia-backend/api"
-	"nia-backend/util"
+	"nia-backend/config"
+	"nia-backend/pkg/api"
 )
 
 func main() {
-	config, err := util.LoadConfig(".")
+	configs, err := config.LoadConfig(".")
 	if err != nil {
 		panic(err)
 	}
@@ -17,7 +17,7 @@ func main() {
 	server := api.NewServer()
 
 	// Start the server
-	err = server.Start(fmt.Sprintf(":%s", config.Port))
+	err = server.Start(fmt.Sprintf(":%s", configs.Port))
 	if err != nil {
 		panic(err)
 	}
