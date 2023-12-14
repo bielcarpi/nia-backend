@@ -29,3 +29,8 @@ Thumbs.db
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Environment
+.env
+.env.local
+.env.test
