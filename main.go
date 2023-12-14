@@ -1,22 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"nia-backend/api"
+	"nia-backend/util"
 )
 
 func main() {
-	/*config, err := util.LoadConfig(".")
+	config, err := util.LoadConfig(".")
 	if err != nil {
-		log.Fatal("cannot load configs", err)
+		panic(err)
 	}
-	*/
 
 	gin.SetMode(gin.DebugMode) //TODO Change to gin.ReleaseMode
-	server := api.NewServer(store)
+	server := api.NewServer()
 
 	// Start the server
-	err := server.Start(":8080")
+	err = server.Start(fmt.Sprintf(":%s", config.Port))
 	if err != nil {
 		panic(err)
 	}
