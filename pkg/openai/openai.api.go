@@ -3,7 +3,6 @@ package openai
 import (
 	"context"
 	"github.com/sashabaranov/go-openai"
-	"io"
 	"nia-backend/config"
 )
 
@@ -11,15 +10,15 @@ type Client struct {
 	client *openai.Client
 }
 
-func OpenAIClientProvider() *Client {
+func ClientProvider() *Client {
 	client := openai.NewClient(config.GetConfig().OpenAIAPIKey)
 	return &Client{client: client}
 }
 
-func (ai *Client) SpeechToText(ctx context.Context, audio io.Reader) (string, error) {
+func (ai *Client) SpeechToText(ctx context.Context, fileName string) (string, error) {
 	req := openai.AudioRequest{
-		Model:  openai.Whisper1,
-		Reader: audio,
+		Model:    openai.Whisper1,
+		FilePath: fileName,
 	}
 	resp, err := ai.client.CreateTranscription(ctx, req)
 	if err != nil {
@@ -31,10 +30,12 @@ func (ai *Client) SpeechToText(ctx context.Context, audio io.Reader) (string, er
 
 func (ai *Client) SendToGPT3(ctx context.Context, prompt string) (string, error) {
 	req := openai.CompletionRequest{
-		Model:     openai.GPT3Dot5Turbo1106,
+		Model:     openai.GPT4,
 		MaxTokens: 500,
 		Prompt:    prompt,
 	}
+
+	print(prompt)
 
 	resp, err := ai.client.CreateCompletion(ctx, req)
 	if err != nil {
