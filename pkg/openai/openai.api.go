@@ -29,20 +29,24 @@ func (ai *Client) SpeechToText(ctx context.Context, fileName string) (string, er
 }
 
 func (ai *Client) SendToGPT3(ctx context.Context, prompt string) (string, error) {
-	req := openai.CompletionRequest{
-		Model:     openai.GPT4,
-		MaxTokens: 500,
-		Prompt:    prompt,
-	}
+	resp, err := ai.client.CreateChatCompletion(
+		ctx,
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: prompt,
+				},
+			},
+		},
+	)
 
-	print(prompt)
-
-	resp, err := ai.client.CreateCompletion(ctx, req)
 	if err != nil {
 		return "", err
 	}
 
-	return resp.Choices[0].Text, nil
+	return resp.Choices[0].Message.Content, nil
 }
 
 func (ai *Client) TextToSpeech(text string) (string, error) {
