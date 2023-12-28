@@ -66,7 +66,42 @@ func ProcessAudioHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"message": generatedText,
-	})
+	speech, err := client.TextToSpeech(c, generatedText)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err = sendSpeech(c, speech)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+}
+
+func sendSpeech(c *gin.Context, speech io.ReadCloser) error {
+	defer speech.Close()
+
+	c.Writer.WriteHeader(http.StatusOK)
+	c.Header("Content-Type", "audio/mpeg")
+	c.Header("Transfer-Encoding", "chunked") // Streaming the audio data to the client
+
+	buffer := make([]byte, 1024)
+	for {
+		n, err := speech.Read(buffer)
+		if err != nil && err != io.EOF {
+			return err
+		}
+		if n == 0 {
+			break
+		}
+		c.Writer.Write(buffer[:n])
+		c.Writer.(http.Flusher).Flush() // Important to flush the buffer
+	}
+
+	return nil
 }

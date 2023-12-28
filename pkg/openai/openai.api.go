@@ -3,6 +3,7 @@ package openai
 import (
 	"context"
 	"github.com/sashabaranov/go-openai"
+	"io"
 	"nia-backend/config"
 )
 
@@ -49,6 +50,15 @@ func (ai *Client) SendToGPT3(ctx context.Context, prompt string) (string, error)
 	return resp.Choices[0].Message.Content, nil
 }
 
-func (ai *Client) TextToSpeech(text string) (string, error) {
-	return "", nil
+func (ai *Client) TextToSpeech(ctx context.Context, text string) (io.ReadCloser, error) {
+	speech, err := ai.client.CreateSpeech(ctx, openai.CreateSpeechRequest{
+		Model: openai.TTSModel1,
+		Input: text,
+		Voice: openai.VoiceAlloy,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return speech, nil
 }
