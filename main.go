@@ -12,7 +12,11 @@ func main() {
 	server := api.NewServer()
 
 	// Start the server
-	err := server.Start(fmt.Sprintf(":%s", config.GetConfig().Port))
+	port := config.GetConfig().Port
+	if port == "" {
+		port = "8080"
+	}
+	err := server.Start(fmt.Sprintf(":%s", port))
 	if err != nil {
 		panic(err)
 	}

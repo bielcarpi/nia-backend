@@ -2,27 +2,18 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"io"
 	"net/http"
 	"nia-backend/pkg/openai"
 	"nia-backend/pkg/util"
-	"os"
-	"path/filepath"
 )
-
-const UPLOAD_DIR = "./uploads"
 
 func ProcessAudioHandler(c *gin.Context) {
 	client := openai.ClientProvider()
 	// TODO handle 429: exceeded current plan limits
 
-	// Receive the audio from the client and temporarily store it
-	filePath, err := receiveSpeech(c)
-	defer os.Remove(filePath)
-
-	// Convert the audio to text
-	text, err := client.SpeechToText(c, filePath)
+	// Convert the stream of audio that's being received to text
+	text, err := client.SpeechToText(c, c.Request.Body)
 	if err != nil {
 		util.SendError(c, err)
 		return
@@ -48,24 +39,6 @@ func ProcessAudioHandler(c *gin.Context) {
 		util.SendError(c, err)
 		return
 	}
-}
-
-func receiveSpeech(c *gin.Context) (string, error) {
-	fileName := uuid.New().String() + ".ogg"
-	filePath := filepath.Join(UPLOAD_DIR, fileName)
-	file, err := os.Create(filePath)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	// Copy the data from the request body to the file
-	_, err = io.Copy(file, c.Request.Body)
-	if err != nil {
-		return "", err
-	}
-
-	return filePath, nil
 }
 
 func sendSpeech(c *gin.Context, speech io.ReadCloser) error {

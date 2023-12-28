@@ -16,10 +16,11 @@ func ClientProvider() *Client {
 	return &Client{client: client}
 }
 
-func (ai *Client) SpeechToText(ctx context.Context, fileName string) (string, error) {
+func (ai *Client) SpeechToText(ctx context.Context, speech io.Reader) (string, error) {
 	req := openai.AudioRequest{
 		Model:    openai.Whisper1,
-		FilePath: fileName,
+		FilePath: "speech.ogg", // This is a workaround to the fact that the API requires a file path
+		Reader:   speech,
 	}
 	resp, err := ai.client.CreateTranscription(ctx, req)
 	if err != nil {
@@ -52,9 +53,10 @@ func (ai *Client) SendToGPT3(ctx context.Context, prompt string) (string, error)
 
 func (ai *Client) TextToSpeech(ctx context.Context, text string) (io.ReadCloser, error) {
 	speech, err := ai.client.CreateSpeech(ctx, openai.CreateSpeechRequest{
-		Model: openai.TTSModel1,
-		Input: text,
-		Voice: openai.VoiceAlloy,
+		Model:          openai.TTSModel1,
+		Input:          text,
+		Voice:          openai.VoiceAlloy,
+		ResponseFormat: openai.SpeechResponseFormatOpus, // We use OGG for better voice compression
 	})
 	if err != nil {
 		return nil, err
