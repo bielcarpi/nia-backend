@@ -19,7 +19,7 @@ func ClientProvider() *Client {
 func (ai *Client) SpeechToText(ctx context.Context, speech io.Reader) (string, error) {
 	req := openai.AudioRequest{
 		Model:    openai.Whisper1,
-		FilePath: "speech.ogg", // This is a workaround to the fact that the API requires a file path
+		FilePath: "speech.m4a", // This is a workaround to the fact that the API requires a file path
 		Reader:   speech,
 	}
 	resp, err := ai.client.CreateTranscription(ctx, req)
