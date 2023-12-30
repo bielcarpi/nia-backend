@@ -56,7 +56,7 @@ func (ai *Client) TextToSpeech(ctx context.Context, text string) (io.ReadCloser,
 		Model:          openai.TTSModel1,
 		Input:          text,
 		Voice:          openai.VoiceAlloy,
-		ResponseFormat: openai.SpeechResponseFormatOpus, // We use OGG for better voice compression
+		ResponseFormat: openai.SpeechResponseFormatAac, // We use AAC for better voice compression
 	})
 	if err != nil {
 		return nil, err
