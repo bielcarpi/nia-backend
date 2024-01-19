@@ -34,7 +34,8 @@ func (ai *Client) SendToGPT3(ctx context.Context, prompt string) (string, error)
 	resp, err := ai.client.CreateChatCompletion(
 		ctx,
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			Model:     openai.GPT3Dot5Turbo,
+			MaxTokens: 60,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
