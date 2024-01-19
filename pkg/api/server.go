@@ -18,7 +18,7 @@ func NewServer() *Server {
 	// Set up /api routing
 	apiRouter := router.Group("/api")
 	apiRouter.Use(middleware.AuthMiddleware())
-	apiRouter.POST("/audio", handlers.ProcessAudioHandler)
+	apiRouter.GET("/audio", handlers.ProcessAudioHandler)
 
 	server.router = router
 	return server
