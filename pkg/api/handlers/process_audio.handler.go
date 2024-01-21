@@ -11,8 +11,8 @@ import (
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:  16384,
+	WriteBufferSize: 16384,
 	CheckOrigin: func(r *http.Request) bool {
 		return true // Allow all origins, adjust as necessary for production
 	},
@@ -88,6 +88,7 @@ func receiveAudioFromWebSocket(conn *websocket.Conn, writer *io.PipeWriter) erro
 		}
 
 		if messageType == websocket.BinaryMessage {
+			print("Binary message received")
 			if _, err := writer.Write(message); err != nil {
 				// Handle error
 				break
